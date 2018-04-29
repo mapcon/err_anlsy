@@ -6,5 +6,8 @@
 def Main():
     pass
 
+def Check():
+    pass
+
 if __name__ == "__main__":
     pass
