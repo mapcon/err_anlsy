@@ -1,6 +1,6 @@
 # coding:utf8
 """
-主函数，试下git，try again
+主函数，试下git
 """
 
 def Main():
