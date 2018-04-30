@@ -7,7 +7,13 @@
 def StartAnlys(sTime):
 	import countdate
 	sDayList = countdate.GetDayList(sTime)
-	print u"分析时段", sDayList
+	dDayData = {} # YYMMDD: dDayData
+	import data
+	for sDay in sDayList:
+		dData = data.GetDayData(sDay)
+		if dData is not None:
+			dDayData[sDay] = dData
+	print u"分析时段%s，共计%d天。已找到%d天数据" % (sTime, len(sDayList), len(dDayData))
 
 
 if __name__ == "__main__":
