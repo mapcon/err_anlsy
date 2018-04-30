@@ -10,7 +10,8 @@ def DoErrorAnlys(dDayData):
 	:param dDayData: {sYYMMDD: dDataList}
 	:return: sMDContent md文档
 	'''
-	return ""
+	import erroranlys
+	return erroranlys.GetReport(dDayData)
 
 
 def DoGraphAnlys(dDayData):
@@ -46,7 +47,6 @@ if __name__ == "__main__":
 	sTime = ""
 	while True:
 		import re
-
 		sInput = raw_input("请输入分析日期，如“180429”或“180427-180429”，Q退出：".decode("utf8").encode("gbk"))
 		if sInput in ("Q", "q"):
 			exit(0)
