@@ -1,1 +1,0 @@
-运行createdata.bat会将本目录下的xls（名字符合[_0-9]）生成一份res/$name$data.py

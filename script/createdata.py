@@ -25,13 +25,14 @@ def GetTransTaskList():
 	import os
 	dTaskList = []
 	oPatt = re.compile(RE_XLSMATCH)  # 匹配xls的模式
-	sFileList = os.listdir(os.getcwd())
+	sXlsPath = os.path.join(os.getcwd(), "res/")
+	sFileList = os.listdir(sXlsPath)
 	for sFile in sFileList:
 		if oPatt.match(sFile):
 			dTask = {}
-			dTask["sXlsFilePath"] = os.path.abspath(sFile)
+			dTask["sXlsFilePath"] = os.path.join(sXlsPath, sFile)
 			sName, _ = os.path.splitext(sFile)
-			sPyData = "data/%sdata.py" % sName
+			sPyData = "script/data/%sdata.py" % sName
 			dTask["sDataPyFilePath"] = os.path.abspath(sPyData)
 			dTaskList.append(dTask)
 	return dTaskList
@@ -66,6 +67,7 @@ def CreateData(sXlsFilePath, sDataPyFilePath):
 def DoTrans():
 	# 获取任务队列
 	dTaskList = GetTransTaskList()
+	print 777, dTaskList
 
 	# 生成py
 	for dTask in dTaskList:
