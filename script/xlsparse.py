@@ -7,6 +7,7 @@ TIMEFORMAT = "(%f-19-70*365)*86400-8*3600"
 RESULT_TYPE_DICT = 1
 RESULT_TYPE_LIST = 2
 MAX_COL = 15  # 超过最大列数的会被忽略。最大行数是取连续非空行最大值
+RE_HEX = "\\\\x([0-9a-f]{2})"
 
 
 def FormatData(tPos, data, sSpecifiedType=None):  # 规整化
@@ -14,7 +15,13 @@ def FormatData(tPos, data, sSpecifiedType=None):  # 规整化
 		if sSpecifiedType == "str" or type(data) == unicode:
 			if data is None:
 				return ""
-			return data.encode("utf8")
+			# 解决gbk编码下"\\x"->"\x"的问题，然后统一转为utf8处理
+			import re
+			data = data.encode("gbk")
+			sCharList = re.findall(RE_HEX, data)
+			for sChar in sCharList:
+				data = data.replace("\\x%s" % sChar, sChar.decode("hex"))
+			return data.decode("gbk").encode("utf8")
 		if sSpecifiedType == "time":
 			if data is None:
 				return 0
