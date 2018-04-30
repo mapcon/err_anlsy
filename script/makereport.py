@@ -41,7 +41,7 @@ def StartAnlys(sTime):
 
 	sErrMD = DoErrorAnlys(dDayData)
 	sGraphMD = DoGraphAnlys(dDayData)
-	sResultFilePath = os.path.join(os.getcwd(), "result_%s.html" % sTime)
+	sResultFilePath = os.path.join(os.getcwd(), "res/result_%s.html" % sTime)
 	genresult.Gen(sResultFilePath, sErrMD, sGraphMD)
 
 
