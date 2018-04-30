@@ -17,6 +17,7 @@ def FormatData(tPos, data, sSpecifiedType=None):  # 规整化
 				return ""
 			# 解决gbk编码下"\\x"->"\x"的问题，然后统一转为utf8处理
 			import re
+			data = data.replace("\"", "'")
 			data_raw = data
 			try:
 				data = data.encode("gbk")

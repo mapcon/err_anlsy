@@ -54,6 +54,7 @@ def GetReport(dDayData):
 		dStackResult[sErrStack] += 1
 
 	sResult = "# 统计报告 #\n"
+	sResult += "周期内报错共`%d`个\n" % len(dTotalList)
 	# 相同类型报告：分布&罗列
 	sResult += "## 同类型报错分布 ##\n"
 	tCountList = []

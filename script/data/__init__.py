@@ -10,4 +10,5 @@ def GetDayData(sDay):  # YYMMDD
 		oModule = getattr(oDataModule, "_%s" % sDay)
 		return oModule.GetData()
 	except:
+		print u"Warning: %s数据获取失败" % sDay
 		return None
