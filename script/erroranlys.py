@@ -17,13 +17,18 @@ def TransErrInfo(sErr):
 	'''
 	dErr = {}
 	sErrList = sErr.split("\n")
-	sTime = sErrList.pop(0)
-	dErr["sErrTime"] = sTime.strip()
-	dErr["sErrType"] = sErrList.pop().strip()
-	sErrStack = ""
-	for sErr in sErrList:
-		sErrStack += "%s\n" % sErr.strip()
-	dErr["sErrStack"] = sErrStack
+	if len(sErrList) == 1:
+		dErr["sErrTime"] = ""
+		dErr["sErrType"] = sErrList.pop(0)
+		dErr["sErrStack"] = dErr["sErrType"]
+	else:
+		sTime = sErrList.pop(0)
+		dErr["sErrTime"] = sTime.strip()
+		dErr["sErrType"] = sErrList.pop().strip()
+		sErrStack = ""
+		for sErr in sErrList:
+			sErrStack += "%s\n" % sErr.strip()
+		dErr["sErrStack"] = sErrStack + dErr["sErrType"]
 	return dErr
 
 def GetReport(dDayData):
@@ -67,7 +72,7 @@ def GetReport(dDayData):
 	tCountList.sort(reverse=True)
 	for iCount, sErr in tCountList:
 		sResult += "  - <%d> %s\n" % (iCount, hash(sErr))
-		sResult += "```\n%s```\n" % sErr
+		sResult += "```\n%s\n```\n" % sErr
 	sResult += "\n" * 5
 
 	# for test
