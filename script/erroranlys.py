@@ -76,14 +76,6 @@ def GetReport(dDayData):
 		sResult += "```\n%s\n```\n" % sErr
 	sResult += "\n" * 5
 
-	# for test
-	f = open("temp.md", "w")
-	import codecs
-	f.write(codecs.BOM_UTF8)
-	f.write(sResult)
-	f.close()
-	# for test
-
 	return sResult
 
 
