@@ -5,7 +5,9 @@
 
 
 def StartAnlys(sTime):
-	print u"分析时段", sTime
+	import countdate
+	sDayList = countdate.GetDayList(sTime)
+	print u"分析时段", sDayList
 
 
 if __name__ == "__main__":
