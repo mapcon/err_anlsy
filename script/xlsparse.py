@@ -17,11 +17,17 @@ def FormatData(tPos, data, sSpecifiedType=None):  # 规整化
 				return ""
 			# 解决gbk编码下"\\x"->"\x"的问题，然后统一转为utf8处理
 			import re
-			data = data.encode("gbk")
-			sCharList = re.findall(RE_HEX, data)
-			for sChar in sCharList:
-				data = data.replace("\\x%s" % sChar, sChar.decode("hex"))
-			return data.decode("gbk").encode("utf8")
+			data_raw = data
+			try:
+				data = data.encode("gbk")
+				sCharList = re.findall(RE_HEX, data)
+				for sChar in sCharList:
+					data = data.replace("\\x%s" % sChar, sChar.decode("hex"))
+				data = data.decode("gbk").encode("utf8")
+			except:
+				data = data_raw.encode("utf8")
+				print u"Warning: 编码混乱", data
+			return data
 		if sSpecifiedType == "time":
 			if data is None:
 				return 0
