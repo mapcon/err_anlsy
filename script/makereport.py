@@ -11,7 +11,8 @@ def DoErrorAnlys(dDayData):
 	:return: sMDContent md文档
 	'''
 	import erroranlys
-	return erroranlys.GetReport(dDayData)
+	import markdown
+	return markdown.markdown(erroranlys.GetReport(dDayData).decode("utf-8", errors='ignore')).encode("utf-8")
 
 
 def DoGraphAnlys(dDayData):
@@ -20,7 +21,8 @@ def DoGraphAnlys(dDayData):
 	:param dDayData: {sYYMMDD: dDataList}
 	:return: sMDContent md文档
 	'''
-	return ""
+	import drawcharts
+	return drawcharts.Draw(dDayData)
 
 
 def StartAnlys(sTime):
