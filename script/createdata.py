@@ -32,7 +32,7 @@ def GetTransTaskList():
 			dTask = {}
 			dTask["sXlsFilePath"] = os.path.join(sXlsPath, sFile)
 			sName, _ = os.path.splitext(sFile)
-			sPyData = "script/data/%sdata.py" % sName
+			sPyData = "script/data/_%s.py" % sName
 			dTask["sDataPyFilePath"] = os.path.abspath(sPyData)
 			dTaskList.append(dTask)
 	return dTaskList
@@ -67,7 +67,6 @@ def CreateData(sXlsFilePath, sDataPyFilePath):
 def DoTrans():
 	# 获取任务队列
 	dTaskList = GetTransTaskList()
-	print 777, dTaskList
 
 	# 生成py
 	for dTask in dTaskList:
