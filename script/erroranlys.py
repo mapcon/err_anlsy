@@ -3,7 +3,7 @@
 todo
 """
 
-MAX_SHOW = -1
+TEST_LOCALREPORT = False # 本地测试标记
 
 def TransErrInfo(sErr):
 	'''
@@ -75,6 +75,13 @@ def GetReport(dDayData):
 		sResult += "  - <%d> %s\n" % (iCount, hash(sErr))
 		sResult += "```\n%s\n```\n" % sErr
 	sResult += "\n" * 5
+
+	if TEST_LOCALREPORT:
+		import codecs
+		f = open("report.md", "w")
+		f.write(codecs.BOM_UTF8)
+		f.write(sResult)
+		f.close()
 
 	return sResult
 
