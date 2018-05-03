@@ -12,7 +12,8 @@ def DoErrorAnlys(dDayData):
 	'''
 	import erroranlys
 	import markdown
-	return markdown.markdown(erroranlys.GetReport(dDayData).decode("utf-8", errors='ignore')).encode("utf-8")
+	usMD = erroranlys.GetReport(dDayData).decode("utf-8", errors='ignore')
+	return markdown.markdown(usMD, ["extra"]).encode("utf-8")
 
 
 def DoGraphAnlys(dDayData):
