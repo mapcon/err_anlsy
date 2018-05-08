@@ -42,7 +42,9 @@ class EChartsManager(object):
 		self.m_ServerDict = {}
 
 		# 引擎数据
-		self.m_EngineDict = {}
+		self.m_EngineData = {}
+		self.m_PureEngineData = {}
+		self.m_EngineMac = {}
 
 		for sKey in data:
 			oneDayData = data[sKey]
@@ -71,9 +73,16 @@ class EChartsManager(object):
 
 	def HandleEngineInfo(self, info):
 		sEngine = info["sEngine"]
-		if sEngine not in self.m_EngineDict:
-			self.m_EngineDict[sEngine] = 0
-		self.m_EngineDict[sEngine] += 1
+		if sEngine not in self.m_EngineData:
+			self.m_EngineData[sEngine] = 0
+		self.m_EngineData[sEngine] += 1
+
+		sMac = info["sMac"]
+		if sMac not in self.m_EngineMac:
+			self.m_EngineMac[sMac] = 0
+			if sEngine not in self.m_PureEngineData:
+				self.m_PureEngineData[sEngine] = 0
+			self.m_PureEngineData[sEngine] += 1
 
 	def DrawTimeLine(self):  # 绘制时间折线图
 		kList = self.m_TimeDict.keys()
@@ -93,10 +102,14 @@ class EChartsManager(object):
 		pie.render(path=SERVER_FILE)
 
 	def DrawEnginePie(self):  # 绘制引擎饼图
-		klist = self.m_EngineDict.keys()
-		vList = [self.m_EngineDict[sEngine] for sEngine in klist]
+		klist = self.m_EngineData.keys()
+		vList = [self.m_EngineData[sEngine] for sEngine in klist]
 		pie = Pie("引擎分布", title_pos='center', title_top=160, width=900, height=700)
 		pie.add("引擎分布饼图", klist, vList, center=[25, 50], is_random=True, radius=[20, 50])
+
+		klist = self.m_PureEngineData.keys()
+		vList = [self.m_PureEngineData[sEngine] for sEngine in klist]
+		pie.add("mac去重后引擎分布", klist, vList, center=[75, 50], is_random=True, radius=[20, 50])
 		pie.render(path=ENGINE_FILE)
 
 	def GetMergeHtmls(self): # 合并多张图表
