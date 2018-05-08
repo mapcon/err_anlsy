@@ -14,13 +14,18 @@ def FormatData(tPos, data, sSpecifiedType=None):  # 规整化
 	try:
 		if sSpecifiedType in ("str", "sDefault"):
 			if data is None: # 缺省处理
+				if sSpecifiedType == "sDefault":
+					return "NULL"
 				return ""
 
-			if sSpecifiedType == "sDefault" and type(data) == float:
-				if data == 0:
-					data = ""
-				else:
-					data = str(int(data))
+			if sSpecifiedType == "sDefault":
+				if type(data) == float:
+					if data == 0:
+						data = "NULL"
+					else:
+						data = str(int(data))
+				if data in ("", "0"):
+					data = "NULL"
 
 			data = data.replace("\"", "'") # 引号转换
 			data_raw = data

@@ -5,13 +5,15 @@ ECharts管理器
 from pyecharts import Line
 from pyecharts import Pie
 
-LINE_FILE   = "line.html"
-PIE_FILE    = "pie.html"
+LINE_FILE = "line.html"
+SERVER_FILE = "pie.html"
+ENGINE_FILE = "engine.html"
 OUTPUT_FILE = "output.html"
 
 FILE_LIST = [
 	LINE_FILE,
-	PIE_FILE,
+	SERVER_FILE,
+	ENGINE_FILE,
 ]
 
 BODYSTART   = "<body>"
@@ -26,6 +28,7 @@ class EChartsManager(object):
 	def DoDraw(self):
 		self.DrawTimeLine()
 		self.DrawServerPie()
+		self.DrawEnginePie()
 		return self.GetMergeHtmls()
 
 	def InitData(self, data): # 初始化导表数据
@@ -38,11 +41,15 @@ class EChartsManager(object):
 		# 服务器数据
 		self.m_ServerDict = {}
 
+		# 引擎数据
+		self.m_EngineDict = {}
+
 		for sKey in data:
 			oneDayData = data[sKey]
 			for info in oneDayData:
 				self.HandleTimeInfo(info)
 				self.HandleServerInfo(info)
+				self.HandleEngineInfo(info)
 
 	def HandleTimeInfo(self, info):  # 处理时间信息
 		import time
@@ -62,6 +69,12 @@ class EChartsManager(object):
 			self.m_ServerDict[sKey] = 0
 		self.m_ServerDict[sKey] += 1
 
+	def HandleEngineInfo(self, info):
+		sEngine = info["sEngine"]
+		if sEngine not in self.m_EngineDict:
+			self.m_EngineDict[sEngine] = 0
+		self.m_EngineDict[sEngine] += 1
+
 	def DrawTimeLine(self):  # 绘制时间折线图
 		kList = self.m_TimeDict.keys()
 		kList.sort()
@@ -77,7 +90,14 @@ class EChartsManager(object):
 		pie = Pie("服务器报错汇总", title_pos='center', title_top=160, width=900, height=700)
 		pie.add("服务器报错饼图", klist, vList, center=[25, 50], is_random=True, radius=[20, 50])
 		pie.add("服务器报错玫瑰图", klist, vList, center=[75, 50], is_random=True, radius=[10, 50], rosetype="area")
-		pie.render(path=PIE_FILE)
+		pie.render(path=SERVER_FILE)
+
+	def DrawEnginePie(self):  # 绘制引擎饼图
+		klist = self.m_EngineDict.keys()
+		vList = [self.m_EngineDict[sEngine] for sEngine in klist]
+		pie = Pie("引擎分布", title_pos='center', title_top=160, width=900, height=700)
+		pie.add("引擎分布饼图", klist, vList, center=[25, 50], is_random=True, radius=[20, 50])
+		pie.render(path=ENGINE_FILE)
 
 	def GetMergeHtmls(self): # 合并多张图表
 		import os
