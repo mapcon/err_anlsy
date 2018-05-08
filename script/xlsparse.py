@@ -12,13 +12,21 @@ RE_HEX = "\\\\x([0-9a-f]{2})"
 
 def FormatData(tPos, data, sSpecifiedType=None):  # 规整化
 	try:
-		if sSpecifiedType == "str" or type(data) == unicode:
-			if data is None:
+		if sSpecifiedType in ("str", "sDefault"):
+			if data is None: # 缺省处理
 				return ""
-			# 解决gbk编码下"\\x"->"\x"的问题，然后统一转为utf8处理
-			import re
-			data = data.replace("\"", "'")
+
+			if sSpecifiedType == "sDefault" and type(data) == float:
+				if data == 0:
+					data = ""
+				else:
+					data = str(int(data))
+
+			data = data.replace("\"", "'") # 引号转换
 			data_raw = data
+
+			# 编码处理，解决gbk编码下"\\x"->"\x"的问题，然后统一转为utf8处理
+			import re
 			try:
 				data = data.encode("gbk")
 				sCharList = re.findall(RE_HEX, data)
@@ -28,11 +36,14 @@ def FormatData(tPos, data, sSpecifiedType=None):  # 规整化
 			except:
 				data = data_raw.encode("utf8")
 				print u"Warning: 编码混乱", data
+
 			return data
+
 		if sSpecifiedType == "time":
 			if data is None:
 				return 0
 			return int(eval(TIMEFORMAT % data))
+
 		if sSpecifiedType == "float" or type(data) == float:
 			if data is None:
 				return 0
@@ -40,13 +51,18 @@ def FormatData(tPos, data, sSpecifiedType=None):  # 规整化
 			if iData == data:
 				return iData
 			return data
-		if sSpecifiedType == "int":
+
+		if sSpecifiedType in ("int", "iDefault"):
 			if data is None:
 				return 0
+
+			if sSpecifiedType == "iDefault" and data == "None":
+				data = "0"
+
 			return int(data)
 		return data
 	except:
-		print "wrong content in %s" % str(tPos)
+		print "wrong content in %s" % str(tPos), repr(data)
 		raise
 
 
@@ -87,7 +103,7 @@ def GetExcelData(sXlsFilePath, sSheetName=None, iKeyRow=0, iResultType=RESULT_TY
 		tPos = iKeyRow, iCol
 		if tPos in dSheetData:
 			data = dSheetData.pop(tPos)  # pop colkey
-			sKey = FormatData(tPos, data)
+			sKey = FormatData(tPos, data, "str") # 行头分析
 			dColKey[iCol] = AnlysColKey(sKey)
 	dRowData = {}  # iRow: {sColKey: data}
 	for tPos, data in dSheetData.iteritems():
@@ -97,7 +113,7 @@ def GetExcelData(sXlsFilePath, sSheetName=None, iKeyRow=0, iResultType=RESULT_TY
 		sColKey, sType = dColKey[iColKey]
 		if iRow not in dRowData:
 			dRowData[iRow] = {}
-		data = FormatData(tPos, data, sType)
+		data = FormatData(tPos, data, sType) # 数据获取
 		dRowData[iRow][sColKey] = data
 
 	iRowList = dRowData.keys()
@@ -107,7 +123,7 @@ def GetExcelData(sXlsFilePath, sSheetName=None, iKeyRow=0, iResultType=RESULT_TY
 		dData = dRowData[iRow]
 		for sColKey, sType in dColKey.itervalues():
 			if sColKey not in dData:
-				data = FormatData(None, None, sType)
+				data = FormatData(None, None, sType) # 缺省填充
 				dData[sColKey] = data
 		dDataList.append(dData)
 	return dDataList
